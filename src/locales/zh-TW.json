@@ -62,7 +62,15 @@
     "productionCountries": "製作國家",
     "spokenLanguages": "語言",
     "homepage": "官方網站",
-    "viewMore": "查看更多"
+    "viewMore": "查看更多",
+    "reviews": "評論",
+    "noReviews": "暫無評論",
+    "writtenBy": "作者",
+    "rating": "評分",
+    "readMore": "展開",
+    "readLess": "收起",
+    "cast": "演員陣容",
+    "noCast": "暫無演員資訊"
   }
 }
 

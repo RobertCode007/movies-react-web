@@ -121,6 +121,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  /* 确保信息区域不会因为子元素而改变布局 */
+  min-width: 0;
+  width: 100%;
 }
 
 .header {
@@ -228,6 +231,185 @@
   line-height: 1.7;
   color: var(--text-color-secondary);
   margin: 0;
+}
+
+// 演员阵容区域
+.cast_section {
+  margin-top: 32px;
+  /* 确保容器不会横向滚动，只允许内部列表滚动 */
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  
+  /* 右侧渐变遮罩，提示可以向右滑动 */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 64px; /* 从标题下方开始（标题高度 + margin-top） */
+    right: 0;
+    bottom: 8px; /* 留出滚动条空间 */
+    width: 80px;
+    background: linear-gradient(to right, 
+      transparent 0%, 
+      transparent 20%, 
+      var(--bg-color) 60%, 
+      var(--bg-color) 100%
+    );
+    pointer-events: none;
+    z-index: 10;
+    /* 只在有内容可以滚动时显示 */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* 当没有内容或加载中时隐藏渐变 */
+  &:has(.cast_loading)::after,
+  &:has(.no_cast)::after {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    &::after {
+      width: 60px;
+      top: 60px;
+    }
+  }
+}
+
+.cast_loading,
+.no_cast {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-size: 16px;
+}
+
+.cast_list {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  /* 只有这个容器可以横向滚动 */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-color) transparent;
+  -webkit-overflow-scrolling: touch;
+  /* 确保列表不会超出父容器 */
+  width: 100%;
+  max-width: 100%;
+  /* 防止列表内容撑开父容器 */
+  min-width: 0;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--theme-color);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-color);
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+}
+
+.cast_item {
+  flex-shrink: 0;
+  width: 140px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: 120px;
+  }
+}
+
+.cast_image_wrapper {
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+  /* 确保文字信息可以显示在图片上方 */
+  z-index: 1;
+  /* 确保子元素可以正确定位 */
+  isolation: isolate;
+
+  .cast_item:hover & {
+    border-color: var(--theme-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.cast_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.cast_info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 8px 8px 8px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 30%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 0 0 8px 8px;
+  /* 确保文字信息显示在图片上方 */
+  z-index: 10;
+  pointer-events: none;
+  /* 确保文字可见 */
+  min-height: 50px;
+  justify-content: flex-end;
+}
+
+.cast_name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.cast_character {
+  font-size: 12px;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
+  opacity: 0.95;
 }
 
 .details_grid {
@@ -426,6 +608,39 @@
     border-radius: 8px;
     border: 1px solid rgba(0, 0, 0, 0.05);
   }
+
+  .review_item {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .reviews_section {
+    border-top-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .cast_image_wrapper {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    .cast_item:hover & {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .cast_info {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+  }
+
+  .cast_section::after {
+    background: linear-gradient(to right, transparent 0%, var(--bg-color) 90%, var(--bg-color) 100%);
+  }
 }
 
 // 暗色主题适配
@@ -448,6 +663,126 @@
   }
 }
 
+// 评论区域
+.reviews_section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-color);
+}
+
+.reviews_loading,
+.no_reviews {
+  padding: 32px;
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-size: 16px;
+}
+
+.reviews_list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.review_item {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--theme-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.review_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.review_author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.review_avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+.review_author_info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.review_author_name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.review_rating {
+  font-size: 14px;
+  color: var(--theme-color);
+  font-weight: 500;
+}
+
+.review_date {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+
+.review_content {
+  p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-color-secondary);
+    margin: 0;
+    word-wrap: break-word;
+  }
+}
+
+.review_toggle {
+  margin-top: 12px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--theme-color);
+  border-radius: 6px;
+  color: var(--theme-color);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--theme-color);
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
 // 响应式设计
 @media (max-width: 768px) {
   .container {
@@ -461,6 +796,36 @@
 
   .details_grid {
     grid-template-columns: 1fr;
+  }
+
+  .reviews_section {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .review_item {
+    padding: 16px;
+  }
+
+  .cast_list {
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+
+  .cast_item {
+    width: 110px;
+  }
+
+  .cast_info {
+    padding: 10px 6px;
+  }
+
+  .cast_name {
+    font-size: 13px;
+  }
+
+  .cast_character {
+    font-size: 11px;
   }
 }
 

@@ -62,7 +62,15 @@
     "productionCountries": "Production Countries",
     "spokenLanguages": "Spoken Languages",
     "homepage": "Homepage",
-    "viewMore": "View More"
+    "viewMore": "View More",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet",
+    "writtenBy": "Written by",
+    "rating": "Rating",
+    "readMore": "Read more",
+    "readLess": "Read less",
+    "cast": "Cast",
+    "noCast": "No cast information available"
   }
 }
 

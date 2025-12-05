@@ -1,11 +1,11 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useRequest } from '../../hooks/useRequest';
 import { useMessage } from '../../hooks/useMessage';
-import { getMovieDetails } from '../../api/api';
-import { MovieDetails } from '../../types/movie';
+import { getMovieDetails, getMovieReviews, getMovieCredits } from '../../api/api';
+import { MovieDetails, Review, Cast } from '../../types/movie';
 import LazyImage from '../../components/LazyImage';
 import MovieInfoPageSkeleton from '../../components/MovieInfoPageSkeleton';
 import styles from './index.module.scss';
@@ -50,6 +50,78 @@ const formatDate = (dateString: string): string => {
   });
 };
 
+// 格式化评论日期
+const formatReviewDate = (dateString: string): string => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+// 获取头像 URL
+const getAvatarUrl = (avatarPath: string | null): string => {
+  if (!avatarPath) return '/placeholder-avatar.png';
+  // avatar_path 可能以 / 开头，如果包含 http，说明是完整的 URL
+  if (avatarPath.startsWith('/https://') || avatarPath.startsWith('/http://')) {
+    return avatarPath.substring(1); // 移除开头的 /
+  }
+  // 如果是相对路径，使用 TMDB 图片服务
+  if (avatarPath.startsWith('/')) {
+    return `https://image.tmdb.org/t/p/w45${avatarPath}`;
+  }
+  return avatarPath;
+};
+
+// 评论项组件
+const ReviewItem: React.FC<{ review: Review }> = ({ review }) => {
+  const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const contentLength = review.content.length;
+  const shouldTruncate = contentLength > 500;
+  const displayContent = shouldTruncate && !expanded 
+    ? review.content.substring(0, 500) + '...' 
+    : review.content;
+
+  return (
+    <div className={styles.review_item}>
+      <div className={styles.review_header}>
+        <div className={styles.review_author}>
+          {review.author_details.avatar_path && (
+            <img
+              src={getAvatarUrl(review.author_details.avatar_path)}
+              alt={review.author}
+              className={styles.review_avatar}
+            />
+          )}
+          <div className={styles.review_author_info}>
+            <span className={styles.review_author_name}>{review.author}</span>
+            {review.author_details.rating && (
+              <span className={styles.review_rating}>
+                ⭐ {review.author_details.rating}/10
+              </span>
+            )}
+          </div>
+        </div>
+        <span className={styles.review_date}>{formatReviewDate(review.created_at)}</span>
+      </div>
+      <div className={styles.review_content}>
+        <p dangerouslySetInnerHTML={{ __html: displayContent.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />') }} />
+        {shouldTruncate && (
+          <button
+            className={styles.review_toggle}
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded ? t('movie.readLess') : t('movie.readMore')}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const MovieInfoPage: React.FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
@@ -80,15 +152,59 @@ const MovieInfoPage: React.FC = () => {
     onError: handleError,
   });
 
+  // 请求评论函数
+  const reviewsRequestFn = useCallback(
+    (movieId: number) => {
+      const language = getApiLanguage(currentLanguage);
+      return getMovieReviews(movieId, { language });
+    },
+    [currentLanguage]
+  );
+
+  // 使用 useRequest 处理评论请求
+  const { data: reviewsData, loading: reviewsLoading, run: runReviews } = useRequest(
+    reviewsRequestFn,
+    {
+      manual: true,
+      onError: (error) => {
+        console.error('Failed to load reviews:', error);
+        // 评论加载失败不显示错误消息，因为这不是关键功能
+      },
+    }
+  );
+
+  // 请求演员阵容函数
+  const creditsRequestFn = useCallback(
+    (movieId: number) => {
+      const language = getApiLanguage(currentLanguage);
+      return getMovieCredits(movieId, { language });
+    },
+    [currentLanguage]
+  );
+
+  // 使用 useRequest 处理演员阵容请求
+  const { data: creditsData, loading: creditsLoading, run: runCredits } = useRequest(
+    creditsRequestFn,
+    {
+      manual: true,
+      onError: (error) => {
+        console.error('Failed to load credits:', error);
+        // 演员阵容加载失败不显示错误消息，因为这不是关键功能
+      },
+    }
+  );
+
   // 当 ID 或语言变化时加载数据
   useEffect(() => {
     if (id) {
       const movieId = parseInt(id, 10);
       if (!isNaN(movieId)) {
         run(movieId);
+        runReviews(movieId);
+        runCredits(movieId);
       }
     }
-  }, [id, currentLanguage, run]);
+  }, [id, currentLanguage, run, runReviews, runCredits]);
 
   // 构建图片 URL
   const imageBaseUrl = 'https://image.tmdb.org/t/p';
@@ -187,6 +303,35 @@ const MovieInfoPage: React.FC = () => {
                 <p className={styles.overview}>{movie.overview}</p>
               </div>
             )}
+
+            {/* 演员阵容 */}
+            <div className={styles.cast_section}>
+              <h2 className={styles.section_title}>{t('movie.cast') || 'Cast'}</h2>
+              {creditsLoading ? (
+                <div className={styles.cast_loading}>{t('common.loading') || 'Loading...'}</div>
+              ) : creditsData && creditsData.cast && creditsData.cast.length > 0 ? (
+                <div className={styles.cast_list}>
+                  {creditsData.cast.slice(0, 12).map((actor) => (
+                    <div key={actor.cast_id} className={styles.cast_item}>
+                      <div className={styles.cast_image_wrapper}>
+                        <LazyImage
+                          src={getPosterUrl(actor.profile_path, 'w185')}
+                          alt={actor.name}
+                          className={styles.cast_image}
+                          aspectRatio="2/3"
+                        />
+                        <div className={styles.cast_info}>
+                          <p className={styles.cast_name}>{actor.name}</p>
+                          <p className={styles.cast_character}>{actor.character}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.no_cast}>{t('movie.noCast') || 'No cast information available'}</div>
+              )}
+            </div>
 
             {/* 详细信息 */}
             <div className={styles.details_grid}>
@@ -322,6 +467,22 @@ const MovieInfoPage: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+
+        {/* 评论列表 */}
+        <div className={styles.reviews_section}>
+          <h2 className={styles.section_title}>{t('movie.reviews') || 'Reviews'}</h2>
+          {reviewsLoading ? (
+            <div className={styles.reviews_loading}>{t('common.loading') || 'Loading...'}</div>
+          ) : reviewsData && reviewsData.results && reviewsData.results.length > 0 ? (
+            <div className={styles.reviews_list}>
+              {reviewsData.results.map((review) => (
+                <ReviewItem key={review.id} review={review} />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.no_reviews}>{t('movie.noReviews') || 'No reviews yet'}</div>
+          )}
         </div>
       </div>
     </div>

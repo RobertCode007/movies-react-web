@@ -1,5 +1,5 @@
 import { request } from '../utils/request';
-import { MovieListResponse, MovieDetails } from '../types/movie';
+import { MovieListResponse, MovieDetails, ReviewResponse, CreditsResponse } from '../types/movie';
 
 // API 请求参数类型
 export interface MovieListParams {
@@ -34,5 +34,15 @@ export const searchMovies = (params: SearchMoviesParams) => {
 // 获取电影详情
 export const getMovieDetails = (id: number, params?: { language?: string }) => {
   return request.get<MovieDetails>(`/movie/${id}`, { params });
+};
+
+// 获取电影评论
+export const getMovieReviews = (id: number, params?: { page?: number; language?: string }) => {
+  return request.get<ReviewResponse>(`/movie/${id}/reviews`, { params });
+};
+
+// 获取电影演员阵容
+export const getMovieCredits = (id: number, params?: { language?: string }) => {
+  return request.get<CreditsResponse>(`/movie/${id}/credits`, { params });
 };
 

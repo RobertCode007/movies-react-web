@@ -1,0 +1,38 @@
+{
+  "common": {
+    "success": "成功",
+    "error": "錯誤",
+    "warning": "警告",
+    "info": "資訊",
+    "close": "關閉",
+    "confirm": "確認",
+    "cancel": "取消",
+    "save": "儲存",
+    "delete": "刪除",
+    "edit": "編輯",
+    "search": "搜尋",
+    "loading": "載入中...",
+    "noData": "無資料"
+  },
+  "message": {
+    "operationSuccess": "操作成功！",
+    "operationFailed": "操作失敗！",
+    "pleaseNote": "請注意！",
+    "thisIsAnInfo": "這是一條提示資訊"
+  },
+  "theme": {
+    "light": "淺色",
+    "dark": "暗色",
+    "toggleTheme": "切換主題"
+  },
+  "language": {
+    "english": "English",
+    "traditionalChinese": "繁體中文",
+    "switchLanguage": "切換語言"
+  },
+  "navigation": {
+    "nowPlaying": "現正熱映",
+    "topRated": "最高評分"
+  }
+}
+

@@ -1,0 +1,38 @@
+{
+  "common": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "close": "Close",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "loading": "Loading...",
+    "noData": "No Data"
+  },
+  "message": {
+    "operationSuccess": "Operation successful!",
+    "operationFailed": "Operation failed!",
+    "pleaseNote": "Please note!",
+    "thisIsAnInfo": "This is an info message"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "toggleTheme": "Toggle Theme"
+  },
+  "language": {
+    "english": "English",
+    "traditionalChinese": "繁體中文",
+    "switchLanguage": "Switch Language"
+  },
+  "navigation": {
+    "nowPlaying": "Now Playing",
+    "topRated": "Top Rated"
+  }
+}
+

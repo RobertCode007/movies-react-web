@@ -1,0 +1,169 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  //border-bottom: 1px solid var(--border-color);
+  //box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.header_container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// 导航栏样式
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav_item {
+  padding: 8px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  opacity: 0.7;
+  overflow: hidden;
+
+  // hover 时的增长线
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--theme-color);
+    border-radius: 2px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px var(--theme-color);
+  }
+
+  &:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
+
+    &::after {
+      width: 60%;
+    }
+  }
+
+  &.nav_item_active {
+    opacity: 1;
+    color: var(--theme-color);
+    background: rgba(244, 22, 22, 0.1);
+
+    &::after {
+      width: 60%;
+    }
+  }
+}
+
+// 右侧功能按钮
+.header_actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--theme-color);
+    color: var(--theme-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// 暗色主题适配
+[data-theme='dark'] {
+  .header {
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav_item {
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.nav_item_active {
+      background: rgba(244, 22, 22, 0.15);
+    }
+  }
+
+  .action_button {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .header_container {
+    padding: 0 16px;
+    height: 56px;
+  }
+
+  .nav_item {
+    padding: 6px 16px;
+    font-size: 14px;
+  }
+
+  .action_button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+

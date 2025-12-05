@@ -1,0 +1,86 @@
+/* ========================================
+   主题变量定义
+   ======================================== */
+:root {
+  /* 浅色主题（默认） */
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --theme-color: #f41616;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  /* 暗色主题 */
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --theme-color: #f41616;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   应用主题变量
+   ======================================== */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================
+   主题切换按钮样式
+   ======================================== */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  padding: 10px 20px;
+  background-color: var(--theme-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   主题相关工具类
+   ======================================== */
+.theme-bg {
+  background-color: var(--bg-color);
+}
+
+.theme-text {
+  color: var(--text-color);
+}
+
+.theme-primary {
+  color: var(--theme-color);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}
+

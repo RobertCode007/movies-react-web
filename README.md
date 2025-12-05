@@ -2,6 +2,10 @@
 
 A movie information display web application built with React + TypeScript, featuring multi-language support, theme switching, infinite scroll, and more.
 
+## Video Demonstration
+
+![Video Demonstration](./public/video_demonstration.gif)
+
 ## Tech Stack
 
 - **React 19.2.1** - UI Framework

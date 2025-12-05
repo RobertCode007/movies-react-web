@@ -1,0 +1,346 @@
+.search_box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 0;
+  opacity: 0;
+  overflow: visible;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  z-index: 1; // 降低 z-index，避免遮挡其他按钮
+
+  &.search_box_open {
+    width: 400px;
+    max-width: calc(100vw - 200px); // 确保不会遮挡右侧按钮（语言切换、主题切换、菜单按钮，预留约200px空间）
+    opacity: 1;
+
+    @media (max-width: 768px) {
+      width: calc(100vw - 32px);
+      max-width: calc(100vw - 32px);
+      position: fixed;
+      top: 72px;
+      left: 16px;
+      right: 16px;
+      margin-top: 0;
+      z-index: 1000; // 搜索框展开时的层级，低于侧拉栏按钮
+    }
+  }
+}
+
+.search_input_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0 16px;
+  box-shadow: 0 4px 16px var(--shadow-color);
+  transition: all 0.3s ease;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  overflow: visible;
+
+  &:hover {
+    border-color: var(--theme-color);
+    box-shadow: 0 4px 16px rgba(244, 22, 22, 0.15);
+  }
+
+  &:focus-within {
+    border-color: var(--theme-color);
+    box-shadow: 0 4px 20px rgba(244, 22, 22, 0.3);
+    background: rgba(244, 22, 22, 0.02);
+  }
+
+  .search_icon {
+    color: var(--text-color);
+    opacity: 0.6;
+    margin-right: 12px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+
+  &:hover .search_icon {
+    color: var(--theme-color);
+    opacity: 0.8;
+  }
+
+  &:focus-within .search_icon {
+    color: var(--theme-color);
+    opacity: 1;
+  }
+
+  .search_input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 15px;
+    padding: 14px 0;
+    width: 100%;
+    transition: color 0.3s ease;
+
+    &::placeholder {
+      color: var(--text-color);
+      opacity: 0.5;
+      transition: opacity 0.3s ease, color 0.3s ease;
+    }
+
+    &:focus {
+      color: var(--text-color);
+
+      &::placeholder {
+        opacity: 0.4;
+      }
+    }
+  }
+
+  &:focus-within .search_input::placeholder {
+    color: var(--theme-color);
+    opacity: 0.6;
+  }
+}
+
+.search_icon {
+  color: var(--text-color);
+  opacity: 0.6;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.search_input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color);
+  font-size: 15px;
+  padding: 14px 0;
+  width: 100%;
+
+  &::placeholder {
+    color: var(--text-color);
+    opacity: 0.5;
+  }
+}
+
+.loading_wrapper {
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.clear_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  opacity: 0.6;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.close_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  opacity: 0.6;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 1;
+    color: var(--theme-color);
+    background: rgba(244, 22, 22, 0.1);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  margin-top: 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow-color);
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1002;
+}
+
+.dropdown_item {
+  display: flex;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid var(--border-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.poster_wrapper {
+  width: 50px;
+  height: 75px;
+  flex-shrink: 0;
+  margin-right: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.movie_title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie_year {
+  font-size: 13px;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin: 0 0 4px 0;
+}
+
+.movie_overview {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.6;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
+.view_all {
+  padding: 12px 16px;
+  text-align: center;
+  color: var(--theme-color);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-top: 1px solid var(--border-color);
+
+  &:hover {
+    background: rgba(244, 22, 22, 0.1);
+  }
+}
+
+// 暗色主题适配
+[data-theme='dark'] {
+  .search_input_wrapper {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown_item {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  .view_all {
+    border-top-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(244, 22, 22, 0.15);
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .search_box {
+    max-width: 100%;
+    right: 0;
+    left: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .search_input {
+    font-size: 14px;
+    padding: 12px 0;
+  }
+
+  .dropdown {
+    max-height: 300px;
+  }
+
+  .movie_overview {
+    -webkit-line-clamp: 1;
+  }
+}
+

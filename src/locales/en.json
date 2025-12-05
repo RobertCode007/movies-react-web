@@ -12,7 +12,10 @@
     "edit": "Edit",
     "search": "Search",
     "loading": "Loading...",
-    "noData": "No Data"
+    "noData": "No Data",
+    "goBack": "Go Back",
+    "loadFailed": "Failed to load",
+    "menu": "Menu"
   },
   "message": {
     "operationSuccess": "Operation successful!",
@@ -33,6 +36,32 @@
   "navigation": {
     "nowPlaying": "Now Playing",
     "topRated": "Top Rated"
+  },
+  "search": {
+    "placeholder": "Search movies...",
+    "viewAllResults": "View all results",
+    "searchResults": "Search Results",
+    "foundResults": "Found {{count}} results",
+    "noResults": "No results found",
+    "noQuery": "Please enter a search keyword",
+    "pleaseEnterKeyword": "Please enter a keyword in the search box",
+    "tryDifferentKeyword": "Try searching with a different keyword",
+    "switchToList": "Switch to list view",
+    "switchToCard": "Switch to card view",
+    "searchFailed": "Search failed"
+  },
+  "movie": {
+    "overview": "Overview",
+    "releaseDate": "Release Date",
+    "runtime": "Runtime",
+    "status": "Status",
+    "originalLanguage": "Original Language",
+    "budget": "Budget",
+    "revenue": "Revenue",
+    "productionCompanies": "Production Companies",
+    "productionCountries": "Production Countries",
+    "spokenLanguages": "Spoken Languages",
+    "homepage": "Homepage"
   }
 }
 

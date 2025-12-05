@@ -80,6 +80,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  position: relative;
+  margin-left: auto; // 确保靠右对齐
+  z-index: 2; // 确保右侧按钮在搜索框之上
+}
+
+.search_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 1; // 确保搜索框在正确的层级
 }
 
 .action_button {
@@ -96,6 +106,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 18px;
+  position: relative;
+  z-index: 3; // 确保按钮在搜索框之上
 
   svg {
     width: 20px;
@@ -113,6 +125,12 @@
 
   &:active {
     transform: translateY(0);
+  }
+
+  &.action_button_active {
+    background: var(--theme-color);
+    border-color: var(--theme-color);
+    color: #fff;
   }
 }
 
@@ -143,27 +161,67 @@
   }
 }
 
+// 桌面端显示，手机端隐藏
+.desktop_only {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+// 手机端显示，桌面端隐藏
+.menu_button {
+  display: none;
+  position: relative;
+  z-index: 10; // 确保侧拉栏按钮在搜索框之上
+
+  @media (max-width: 768px) {
+    display: flex !important;
+  }
+}
+
 // 响应式设计
 @media (max-width: 768px) {
   .header_container {
     padding: 0 16px;
     height: 56px;
+    position: relative;
   }
 
-  .nav_item {
-    padding: 6px 16px;
-    font-size: 14px;
+  // 手机端隐藏导航栏
+  .nav {
+    display: none;
+  }
+
+  .header_actions {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .search_wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  .menu_button {
+    position: relative;
+    z-index: 10; // 确保侧拉栏按钮始终可点击
   }
 
   .action_button {
     width: 36px;
     height: 36px;
     font-size: 16px;
+    flex-shrink: 0;
 
     svg {
       width: 18px;
       height: 18px;
     }
+  }
+
+  .menu_button {
+    display: flex !important;
+    flex-shrink: 0;
   }
 }
 

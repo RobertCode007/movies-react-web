@@ -12,7 +12,10 @@
     "edit": "編輯",
     "search": "搜尋",
     "loading": "載入中...",
-    "noData": "無資料"
+    "noData": "無資料",
+    "goBack": "返回",
+    "loadFailed": "載入失敗",
+    "menu": "選單"
   },
   "message": {
     "operationSuccess": "操作成功！",
@@ -33,6 +36,32 @@
   "navigation": {
     "nowPlaying": "現正熱映",
     "topRated": "最高評分"
+  },
+  "search": {
+    "placeholder": "搜尋電影...",
+    "viewAllResults": "查看所有結果",
+    "searchResults": "搜尋結果",
+    "foundResults": "找到 {{count}} 個結果",
+    "noResults": "沒有找到結果",
+    "noQuery": "請輸入搜尋關鍵詞",
+    "pleaseEnterKeyword": "請在搜尋框中輸入關鍵詞",
+    "tryDifferentKeyword": "嘗試使用不同的關鍵詞搜尋",
+    "switchToList": "切換到列表視圖",
+    "switchToCard": "切換到卡片視圖",
+    "searchFailed": "搜尋失敗"
+  },
+  "movie": {
+    "overview": "劇情簡介",
+    "releaseDate": "上映日期",
+    "runtime": "片長",
+    "status": "狀態",
+    "originalLanguage": "原始語言",
+    "budget": "預算",
+    "revenue": "票房收入",
+    "productionCompanies": "製作公司",
+    "productionCountries": "製作國家",
+    "spokenLanguages": "語言",
+    "homepage": "官方網站"
   }
 }
 

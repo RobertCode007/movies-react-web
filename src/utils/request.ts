@@ -21,6 +21,7 @@ const instance: AxiosInstance = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNDdhMWVlNTBkZWIwMjcwNWY5YmM0NDNkZTZlMTI2YyIsIm5iZiI6MTc2NDg3MDg0My45MzkwMDAxLCJzdWIiOiI2OTMxY2FiYjU0ZjBmNzZiZDg0MWU2YzciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.mGaZ0r7JVPEOd5egQLzX7TTRe76B2xO5V5-hJ5OwzIs'
   },
 });
 
@@ -47,8 +48,8 @@ instance.interceptors.request.use(
 
 // 响应拦截器
 instance.interceptors.response.use(
-  (response: AxiosResponse<ApiResponse>) => {
-    const { data, status } = response;
+  (response: AxiosResponse<any>) => {
+    const { status } = response;
 
     // status 为 200 表示访问正常
     if (status === 200) {
@@ -113,24 +114,24 @@ instance.interceptors.response.use(
 
 // 封装请求方法
 export const request = {
-  get<T = any>(url: string, config?: RequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
-    return instance.get<ApiResponse<T>>(url, config);
+  get<T = any>(url: string, config?: RequestConfig): Promise<AxiosResponse<T | ApiResponse<T>>> {
+    return instance.get<T | ApiResponse<T>>(url, config);
   },
 
-  post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
-    return instance.post<ApiResponse<T>>(url, data, config);
+  post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<AxiosResponse<T | ApiResponse<T>>> {
+    return instance.post<T | ApiResponse<T>>(url, data, config);
   },
 
-  put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
-    return instance.put<ApiResponse<T>>(url, data, config);
+  put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<AxiosResponse<T | ApiResponse<T>>> {
+    return instance.put<T | ApiResponse<T>>(url, data, config);
   },
 
-  patch<T = any>(url: string, data?: any, config?: RequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
-    return instance.patch<ApiResponse<T>>(url, data, config);
+  patch<T = any>(url: string, data?: any, config?: RequestConfig): Promise<AxiosResponse<T | ApiResponse<T>>> {
+    return instance.patch<T | ApiResponse<T>>(url, data, config);
   },
 
-  delete<T = any>(url: string, config?: RequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
-    return instance.delete<ApiResponse<T>>(url, config);
+  delete<T = any>(url: string, config?: RequestConfig): Promise<AxiosResponse<T | ApiResponse<T>>> {
+    return instance.delete<T | ApiResponse<T>>(url, config);
   },
 };
 

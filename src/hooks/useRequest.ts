@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { AxiosResponse } from 'axios';
 import { request, ApiResponse, RequestConfig } from '../utils/request';
 
@@ -22,7 +22,7 @@ interface UseRequestResult<T> {
  * @param options 配置选项
  */
 export function useRequest<T = any>(
-  requestFn: (...args: any[]) => Promise<AxiosResponse<ApiResponse<T>>>,
+  requestFn: (...args: any[]) => Promise<AxiosResponse<ApiResponse<T> | T>>,
   options: UseRequestOptions<T> = {}
 ): UseRequestResult<T> {
   const {
@@ -37,6 +37,17 @@ export function useRequest<T = any>(
   const [loading, setLoading] = useState<boolean>(!manual);
   const [error, setError] = useState<any>(null);
   const [params, setParams] = useState<any[]>([]);
+  
+  // 使用 useRef 存储回调函数和请求函数，避免依赖项变化
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+  const requestFnRef = useRef(requestFn);
+  
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current = onError;
+    requestFnRef.current = requestFn;
+  }, [onSuccess, onError, requestFn]);
 
   const executeRequest = useCallback(
     async (...args: any[]) => {
@@ -44,23 +55,30 @@ export function useRequest<T = any>(
       setError(null);
 
       try {
-        const response = await requestFn(...args);
-        // 提取实际数据：如果 response.data 有 data 属性，使用它；否则使用整个 response.data
+        const response = await requestFnRef.current(...args);
+        // 提取实际数据：如果 response.data 有 data 属性且是 ApiResponse 格式，使用它；否则使用整个 response.data
         let responseData: T;
-        const apiResponse = response.data as ApiResponse<T>;
+        const responseDataRaw = response.data;
         
-        // 检查是否是 ApiResponse 格式（有 data 属性）
-        if (apiResponse && typeof apiResponse === 'object' && 'data' in apiResponse) {
-          responseData = apiResponse.data;
+        // 检查是否是 ApiResponse 格式（有 data 属性且不是数组）
+        if (
+          responseDataRaw &&
+          typeof responseDataRaw === 'object' &&
+          'data' in responseDataRaw &&
+          !Array.isArray(responseDataRaw) &&
+          (responseDataRaw as ApiResponse<T>).data !== undefined
+        ) {
+          // ApiResponse 格式：{ data: T, code?: number, message?: string }
+          responseData = (responseDataRaw as ApiResponse<T>).data;
         } else {
-          // 直接返回的数据
-          responseData = response.data as T;
+          // 直接返回的数据格式：T
+          responseData = responseDataRaw as T;
         }
         
         setData(responseData);
 
-        if (onSuccess) {
-          onSuccess(responseData);
+        if (onSuccessRef.current) {
+          onSuccessRef.current(responseData);
         }
       } catch (err: any) {
         setError(err);
@@ -71,14 +89,14 @@ export function useRequest<T = any>(
           console.error('Request Error:', errorMessage);
         }
 
-        if (onError) {
-          onError(err);
+        if (onErrorRef.current) {
+          onErrorRef.current(err);
         }
       } finally {
         setLoading(false);
       }
     },
-    [requestFn, onSuccess, onError, showError, requestConfig.skipErrorHandler]
+    [showError, requestConfig.skipErrorHandler]
   );
 
   const run = useCallback(

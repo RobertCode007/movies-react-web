@@ -1,0 +1,51 @@
+.movie_card_skeleton {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.poster_skeleton {
+  position: relative;
+  width: 100%;
+  padding-top: 150%; // 2:3 比例
+  
+  & > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.info_skeleton {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date_skeleton {
+  margin-top: 4px;
+}
+
+// 亮色主题适配
+[data-theme='light'] {
+  .movie_card_skeleton {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border-color);
+  }
+}
+
+// 暗色主题适配
+[data-theme='dark'] {
+  .movie_card_skeleton {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+

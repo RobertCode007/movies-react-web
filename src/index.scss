@@ -84,3 +84,33 @@ body {
   border-color: var(--border-color);
 }
 
+/* ========================================
+   自定义滚动条样式
+   ======================================== */
+/* Webkit 浏览器（Chrome, Safari, Edge） */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-color);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(244, 22, 22, 0.8);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-color) var(--bg-color);
+}
+

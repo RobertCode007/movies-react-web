@@ -11,10 +11,10 @@ const MovieCardSkeleton: React.FC = () => {
           height="100%" 
           borderRadius="12px"
         />
-      </div>
       <div className={styles.info_skeleton}>
         <Skeleton width="80%" height="20px" borderRadius="6px" />
         <Skeleton width="40%" height="16px" borderRadius="6px" className={styles.date_skeleton} />
+        </div>
       </div>
     </div>
   );
